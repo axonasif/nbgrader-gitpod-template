@@ -1,0 +1,9 @@
+biopython
+matplotlib
+nbgrader==0.8.5
+numpy
+pandas
+pysam
+regex
+scipy
+seaborn

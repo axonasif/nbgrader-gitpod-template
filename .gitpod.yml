@@ -1,0 +1,20 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: Install Python packages from requirements.txt
+    init: pip3 install -r requirements.txt
+    command: |
+      jupyter nbextension install --sys-prefix --py nbgrader
+      jupyter nbextension enable --sys-prefix --py nbgrader
+      jupyter labextension enable nbgrader
+
+#  - name: Install packages from Bioconda
+#    command: conda install -c bioconda bwa blast samtools --solver=libmamba
+
+vscode:
+  extensions:
+    - eamodio.gitlens
+    - janisdd.vscode-edit-csv
+    - mechatroner.rainbow-csv
+    - ms-python.python
