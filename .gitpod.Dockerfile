@@ -1,5 +1,6 @@
-# Use the Gitpod base image for Python 3.11
-FROM gitpod/workspace-python-3.11
+# Image source code: https://github.com/axonasif/workspace-images/tree/tmp
+# Also see https://github.com/gitpod-io/workspace-images/issues/1071
+FROM axonasif/workspace-python@sha256:f5ba627a31505ea6cf100abe8e552d7ff9e0abd6ba46745b6d6dab349c001430
 
 # Set user
 USER gitpod
@@ -23,5 +24,11 @@ RUN conda config --add channels conda-forge && \
 # Set libmamba as solver
 RUN conda config --set solver libmamba
 
+# Persist ~/miniconda
+RUN echo 'create-overlay $HOME/miniconda' > "$HOME/.runonce/1-miniconda"
+
+# Persist ~/.condarc
+RUN echo 'create-overlay $HOME/.condarc' > "$HOME/.runonce/2-condarc"
+
 # Remove the undesired default Python location from PATH
-RUN export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
+#RUN export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
