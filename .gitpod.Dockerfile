@@ -33,5 +33,9 @@ RUN echo 'create-overlay $HOME/.condarc' > "$HOME/.runonce/2-condarc"
 # Persist /lib
 RUN echo 'create-overlay /lib' > "$HOME/.runonce/3-lib"
 
+# Persist .bashrc
+RUN echo 'create-overlay $HOME/.bashrc' > "$HOME/.runonce/4-bashrc"
+
+
 # Remove the undesired default Python location from PATH
-#RUN export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
+RUN export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')

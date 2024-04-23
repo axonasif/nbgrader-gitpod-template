@@ -1,0 +1,10 @@
+name: graderenv
+channels:
+    - conda-forge
+    - bioconda
+dependencies:
+  - python=3.11
+  - nbgrader==0.8.5
+  - pip
+ #- pip:
+ #  - packagefrompip
