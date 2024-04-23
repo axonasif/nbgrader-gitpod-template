@@ -2,12 +2,16 @@
 ## Quickstart upon reopening a stopped Gitpod workspace
 
 ```bash
-# Open grading env (if not using base env)
-conda activate graderenv
-
 # Increase gitpod timeout setting
 gp timeout set 6h
 
+# Launch Jupyter session in Assignment dir
+gogo assignments
+```
+
+Or manually start Jupyter session to work on assignments
+
+```bash
 # Navigate to Assignments db location
 cd nbgrader/Assignments
 
@@ -23,7 +27,51 @@ jupyter notebook --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_acces
 
 **Note:** See other [gitpod settings](https://www.gitpod.io/docs/references/gitpod-cli#set) here.
 
-## Installing nbgrader
+## Setting up Gitpod Environment
+
+Setup is handled via `.gitpod.yml` ans `.gitpod.Dockerfile`
+- Add channels defaults, conda-forge, and bioconda
+- pip install nbgrader and all python deps (conda was too slow)
+- conda installed non-python packages (blast bwa samtools)
+- init nbextensions
+- alias 'gogo' launcher script
+
+```bash
+
+# Navigate to nbgrader project dir
+cd nbgrader/Assignments
+
+## Create a config for jupyter notebook (might be fine to skip this bit)
+#jupyter notebook --generate-config 
+##Add lines:
+#c.NotebookApp.allow_origin = '*'
+#c.NotebookApp.allow_remote_access = True
+
+# Generate blank nbgrader config file
+nbgrader generate_config
+
+# Add these lines to nbgrader_config.py
+import tempfile
+c.Exchange.root = tempfile.mkdtemp()
+c.NotebookApp.allow_origin = '*'
+c.NotebookApp.allow_remote_access = True
+
+# andUpdate the Course name
+c.CourseDirectory.course_id = 'COURSE_ID_2024'
+
+# Populate nbgrader student database (on first run only)
+nbgrader db student import ../students/students_2024.csv
+
+# Open jupyter for grading or assignment development
+# Launch jupyter-lab
+jupyter lab --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_access=True --NotebookApp.token='' --NotebookApp.password='' --no-browser --port=8888
+
+# or if using older nbgrader < v0.9.0, can use jupyter-notebook
+jupyter notebook --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_access=True --NotebookApp.token='' --NotebookApp.password='' --no-browser --port=8888
+
+```
+
+## Installing nbgrader locally
 
 ```bash
 # Create conda env from yml
@@ -32,7 +80,7 @@ conda env create -f nbgrader/environment.yml
 # or create manually
 conda create --name graderenv python=3.11
 source activate graderenv
-conda install -c conda-forge 'nbgrader>=0.8.1'
+conda install -c conda-forge 'nbgrader==0.8.5'
 # Note: Check that you are using the latest versions of
 # nbconvert
 # jupyter-client
@@ -49,56 +97,12 @@ jupyter labextension enable nbgrader
 jupyter serverextension enable --sys-prefix --py nbgrader
 
 # Packages for Comp Gen Assignment 1 & 2 2024
+pip3 install -r requirements.txt
 #pip install numpy pandas seaborn matplotlib pysam biopython
-#conda install blast bwa samtools
+conda install -c bioconda blast bwa samtools
 ```
 
-## Setting up Gitpod Environment
-
-Notes on Gitpod setup:
-- Added channels defaults, conda-forge, and bioconda
-- pip installed nbgrader and all python deps (conda was too slow)
-- conda installed non-python packages (blast bwa samtools)
-
-```bash
-
-# Create and activate an conda environment
-conda env create -f nbgrader/Assignments/environment.yml
-
-# Activate env
-conda activate graderenv
-
-# Activate nbgrader extensions
-jupyter nbextension install --sys-prefix --py nbgrader
-jupyter nbextension enable --sys-prefix --py nbgrader
-
-# Only need these ones if using nbgrader with Jupyter Lab or Server
-jupyter labextension enable nbgrader
-jupyter serverextension enable --sys-prefix --py nbgrader
-
-# Populate nbgrader student database (on first run only)
-cd nbgrader/Assignments
-nbgrader db student import ../students/students_2024.csv
-
-# Create a config for jupyter notebook
-jupyter notebook --generate-config 
-
-# Add these lines:
-'''
-c.NotebookApp.allow_origin = '*'
-c.NotebookApp.allow_remote_access = True
-'''
-
-# Open jupyter for grading
-# Launch jupyter-lab
-jupyter lab --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_access=True --NotebookApp.token='' --NotebookApp.password='' --no-browser --port=8888
-
-# or if using older nbgrader < v0.9.0, can use jupyter-notebook
-jupyter notebook --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_access=True --NotebookApp.token='' --NotebookApp.password='' --no-browser --port=8888
-
-```
-
-## Setting up nbgrader instance
+## Setting up local nbgrader instance
 
 Generate blank config file.
 
@@ -138,8 +142,6 @@ Or manually add a student
 #Manually create a student
 nbgrader db student add --first-name=Adam --last-name=Taranto --email=adam.p.taranto@gmail.com --lms-user-id=U001 U001
 ```
-
-
 
 Set up directory structure for assignment submissions.
 Should be run in top level nbgrader dir that also contains "source" folder.
