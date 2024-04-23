@@ -2,15 +2,24 @@ image:
   file: .gitpod.Dockerfile
 
 tasks:
-  - name: Install Python packages from requirements.txt
-    init: pip3 install -r requirements.txt
-    command: |
+  - name: Init Gitpod Workspace
+    init: |
+      pip3 install -r requirements.txt
       jupyter nbextension install --sys-prefix --py nbgrader
       jupyter nbextension enable --sys-prefix --py nbgrader
       jupyter labextension enable nbgrader
+      conda install --yes -c bioconda bwa blast samtools --solver=libmamba
+      conda clean --all --yes
+      echo "alias gogo='$GITPOD_REPO_ROOT/utils/gogo.sh'" >> $HOME/.bashrc
+      source $HOME/.bashrc
+    command: |
+      echo "Running: $GITPOD_WORKSPACE_URL"
+      echo "Call 'gogo a' or 'gogo w' to edit nbgrader assignments or workshops."
 
-#  - name: Install packages from Bioconda
-#    command: conda install -c bioconda bwa blast samtools --solver=libmamba
+# - name: Install packages from Bioconda
+#   command: |
+#     conda install -c bioconda bwa blast samtools --solver=libmamba
+#     conda clean --all --yes
 
 vscode:
   extensions:
