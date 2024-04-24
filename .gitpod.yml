@@ -4,7 +4,10 @@ image:
 tasks:
   - name: Init Gitpod Workspace
     init: |
-      pip3 install -r requirements.txt
+      echo $PATH
+      export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
+      echo $PATH
+      /home/gitpod/miniconda/bin/pip3 install -r requirements.txt
       jupyter nbextension install --sys-prefix --py nbgrader
       jupyter nbextension enable --sys-prefix --py nbgrader
       jupyter labextension enable nbgrader
@@ -13,9 +16,11 @@ tasks:
       echo "alias gogo='$GITPOD_REPO_ROOT/utils/gogo.sh'" >> $HOME/.bashrc
       source $HOME/.bashrc
     command: |
+      echo $PATH
+      export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
       echo "Running: $GITPOD_WORKSPACE_URL"
       echo "Call 'gogo a' or 'gogo w' to edit nbgrader assignments or workshops."
-
+      
 # - name: Install packages from Bioconda
 #   command: |
 #     conda install -c bioconda bwa blast samtools --solver=libmamba
