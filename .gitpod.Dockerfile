@@ -24,18 +24,13 @@ RUN conda config --add channels conda-forge && \
 # Set libmamba as solver
 RUN conda config --set solver libmamba
 
-# Persist ~/miniconda
-RUN echo 'create-overlay $HOME/miniconda' > "$HOME/.runonce/1-miniconda"
-
-# Persist ~/.condarc
-RUN echo 'create-overlay $HOME/.condarc' > "$HOME/.runonce/2-condarc"
+# Persist ~/ (HOME)
+RUN echo 'create-overlay $HOME' > "$HOME/.runonce/1-home_persist"
 
 # Persist /lib
 RUN echo 'create-overlay /lib' > "$HOME/.runonce/3-lib"
 
-# Persist .bashrc
-RUN echo 'create-overlay $HOME/.bashrc' > "$HOME/.runonce/4-bashrc"
+# Remove pyenv
+RUN rm -rf $HOME/.pyenv $HOME/{.bashrc.d,.runonce}/*-python
 
-
-# Remove the undesired default Python location from PATH
-RUN export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
+RUN echo 'alias gogo="$GITPOD_REPO_ROOT/utils/gogo.sh"' >> $HOME/.bashrc

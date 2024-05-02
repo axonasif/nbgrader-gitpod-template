@@ -4,23 +4,13 @@ image:
 tasks:
   - name: Init Gitpod Workspace
     init: |
-      echo "alias gogo='$GITPOD_REPO_ROOT/utils/gogo.sh'" >> $HOME/.bashrc
-      source $HOME/.bashrc
-      echo $PATH
-      export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
-      echo $PATH
-      /home/gitpod/miniconda/bin/pip3 install -r requirements.txt
+      pip3 install -r requirements.txt
       jupyter nbextension install --sys-prefix --py nbgrader
       jupyter nbextension enable --sys-prefix --py nbgrader
       jupyter labextension enable nbgrader
       conda install --yes -c bioconda bwa blast samtools --solver=libmamba
       conda clean --all --yes
     command: |
-      echo "alias gogo='$GITPOD_REPO_ROOT/utils/gogo.sh'" >> $HOME/.bashrc
-      source $HOME/.bashrc
-      echo $PATH
-      export PATH=$(echo $PATH | tr ':' '\n' | grep -v '/home/gitpod/.pyenv/shims' | tr '\n' ':')
-      echo $PATH
       echo "Running: $GITPOD_WORKSPACE_URL"
       echo "Call 'gogo a' or 'gogo w' to edit nbgrader assignments or workshops."
 
