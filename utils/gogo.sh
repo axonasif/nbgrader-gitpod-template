@@ -3,7 +3,7 @@
 # Function to display usage and exit
 usage() {
     echo "Usage: $0 <directory>"
-    echo "   where <directory> is one of: A, Ass, Assignment, W, Workshops, Work"
+    echo "   where <directory> is one of: A, Ass, Assignment, W, Work, Workshops."
     exit 1
 }
 
