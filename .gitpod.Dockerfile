@@ -33,4 +33,4 @@ RUN echo 'create-overlay /lib' > "$HOME/.runonce/3-lib"
 # Remove pyenv
 RUN rm -rf $HOME/.pyenv $HOME/{.bashrc.d,.runonce}/*-python
 
-RUN echo 'alias gogo="$GITPOD_REPO_ROOT/utils/gogo.sh"' >> $HOME/.bashrc
+RUN echo 'alias gogo="$GITPOD_REPO_ROOT/utils/gogo.sh"' >> $HOME/.bash_aliases
