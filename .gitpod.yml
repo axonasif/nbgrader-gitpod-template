@@ -14,10 +14,10 @@ tasks:
       echo "Running: $GITPOD_WORKSPACE_URL"
       echo "Call 'gogo a' or 'gogo w' to edit nbgrader assignments or workshops."
 
-# - name: Install packages from Bioconda
-#   command: |
-#     conda install -c bioconda bwa blast samtools --solver=libmamba
-#     conda clean --all --yes
+ports:
+  - name: Jupyter Notebook
+    port: 8888
+    onOpen: open-browser
 
 vscode:
   extensions:
