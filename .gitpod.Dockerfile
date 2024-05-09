@@ -1,6 +1,6 @@
 # Image source code: https://github.com/axonasif/workspace-images/tree/tmp
 # Also see https://github.com/gitpod-io/workspace-images/issues/1071
-FROM axonasif/workspace-python@sha256:f5ba627a31505ea6cf100abe8e552d7ff9e0abd6ba46745b6d6dab349c001430
+FROM axonasif/workspace-base@sha256:8c057b1d13bdfe8c279c68aef8242d32110c8d5310f9a393f9c0417bc61367d9
 
 # Set user
 USER gitpod
@@ -24,13 +24,13 @@ RUN conda config --add channels conda-forge && \
 # Set libmamba as solver
 RUN conda config --set solver libmamba
 
-# Persist ~/ (HOME)
-RUN echo 'create-overlay $HOME' > "$HOME/.runonce/1-home_persist"
+# Persist ~/ (HOME) and lib
+RUN echo 'create-overlay $HOME /lib' > "$HOME/.runonce/1-home-lib_persist"
 
-# Persist /lib
-RUN echo 'create-overlay /lib' > "$HOME/.runonce/3-lib"
-
-# Remove pyenv
-RUN rm -rf $HOME/.pyenv $HOME/{.bashrc.d,.runonce}/*-python
-
+# Create an alias
 RUN echo 'alias gogo="$GITPOD_REPO_ROOT/utils/gogo.sh"' >> $HOME/.bash_aliases
+
+# Referenced in `.vscode/settings.json`
+ENV PYTHON_INTERPRETER="$HOME/miniconda/bin/python"
+# Pycharm recognizes this variables
+ENV PYCHARM_PYTHON_PATH="${PYTHON_INTERPRETER}"
