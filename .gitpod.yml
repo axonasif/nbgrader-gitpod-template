@@ -25,3 +25,5 @@ vscode:
     - janisdd.vscode-edit-csv
     - mechatroner.rainbow-csv
     - ms-python.python
+    - ms-python.debugpy
+    
