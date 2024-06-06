@@ -1,3 +1,11 @@
+# Assignment Grading
+# Ignore all sub-dirs in the autograding output
+nbgrader/Assignments/autograded/*/Assignment_*/**
+# Ignore all files in the auto-grading output for each assignment of each student
+nbgrader/Assignments/autograded/*/Assignment_*/*
+# Un-ignore files that end with .ipynb
+!nbgrader/Assignments/autograded/*/Assignment_*/*.ipynb
+
 # Dev stuff
 miniconda3/
 miniconda/
