@@ -1,16 +1,43 @@
 # Assignment Grading
-# Ignore all sub-dirs in the autograding output
-nbgrader/Assignments/autograded/*/**/**
-# Ignore all files in the auto-grading output for each assignment of each student
-nbgrader/Assignments/autograded/*/**/*
-# Un-ignore files that end with .ipynb
-!nbgrader/Assignments/autograded/*/**/*.ipynb
+# Ignore all files and directories recursively under the autograded directory
+nbgrader/Assignments/autograded/**
+# Do not ignore student directories directly under autograded
+!nbgrader/Assignments/autograded/*/
+# Do not ignore assignment directories directly under each student directory
+!nbgrader/Assignments/autograded/*/*/
+# Ignore all files and directories recursively under each assignment directory
+nbgrader/Assignments/autograded/*/*/**
+# Un-ignore .ipynb files directly under each assignment directory
+!nbgrader/Assignments/autograded/*/*/*.ipynb
+
+# Assignment Releases
+# Ignore everything in the release directory
+nbgrader/Assignments/release/**
+# Do not ignore directories directly under the release directory
+!nbgrader/Assignments/release/*/
+# Ignore everything in subdirectories under each assignment directory
+nbgrader/Assignments/release/*/**
+# Un-ignore .ipynb files directly under each assignment directory
+!nbgrader/Assignments/release/*/*.ipynb
+
+# Workshop releases
+# Ignore everything in the release directory
+nbgrader/Workshops/release/**
+# Do not ignore directories directly under the release directory
+!nbgrader/Workshops/release/*/
+# Ignore everything in subdirectories under each assignment directory
+nbgrader/Workshops/release/*/**
+# Un-ignore .ipynb files directly under each assignment directory
+!nbgrader/Workshops/release/*/*.ipynb
+
+# Don't track the nbgrader db
+nbgrader/*/gradebook.db
+
+# Mac stuff
+.DS_Store
 
 # Dev stuff
-miniconda3/
-miniconda/
 archive/
-gradebook.db
 *mp4
 *pptx
 nbgrader/Workshops/examples/
@@ -144,9 +171,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# Mac stuff
-.DS_Store
-nbgrader/Assignments/source/Assignment_1/Assignment_1.ipynb
-nbgrader/Assignments/source/Assignment_2/Assignment_2.ipynb
-nbgrader/Assignments/source/Assignment_1/comp90016_assignment_1.fastq.gz
