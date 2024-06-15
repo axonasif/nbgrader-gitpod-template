@@ -29,6 +29,7 @@ RUN echo 'create-overlay $HOME /lib' > "$HOME/.runonce/1-home-lib_persist"
 
 # Create an alias
 RUN echo 'alias gogo="$GITPOD_REPO_ROOT/utils/gogo.sh"' >> $HOME/.bash_aliases
+RUN echo 'alias nb_load="$GITPOD_REPO_ROOT/utils/nb_load.sh"' >> $HOME/.bash_aliases
 
 # Referenced in `.vscode/settings.json`
 ENV PYTHON_INTERPRETER="$HOME/miniconda/bin/python"
