@@ -1,4 +1,5 @@
-# Working with nbgrader
+# Working with nbgrader in Gitpod
+
 ## Quickstart upon reopening a stopped Gitpod workspace
 
 ```bash
@@ -27,51 +28,69 @@ jupyter notebook --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_acces
 
 **Note:** See other [gitpod settings](https://www.gitpod.io/docs/references/gitpod-cli#set) here.
 
-## Setting up Gitpod Environment
+## Setting up new nbgrader Course in Gitpod
 
-Setup is handled via `.gitpod.yml` ans `.gitpod.Dockerfile`
+In this repo setup of the Gitpod workspace is handled via `.gitpod.yml` ans `.gitpod.Dockerfile`.
+
+These config files do the following tasks:
 - Add channels defaults, conda-forge, and bioconda
 - pip install nbgrader and all python deps (conda was too slow)
-- conda installed non-python packages (blast bwa samtools)
-- init nbextensions
+- conda install non-python packages (blast bwa samtools)
+- init the nbextensions
 - alias 'gogo' launcher script
+
+In this example we will create an nbgrader course called "Assignments"
 
 ```bash
 
-# Navigate to nbgrader project dir
+# Create the course dir
+mkdir -p nbgrader/Assignments
+
+# Navigate to nbgrader course dir
 cd nbgrader/Assignments
 
-## Create a config for jupyter notebook (might be fine to skip this bit)
-#jupyter notebook --generate-config 
-##Add lines:
-#c.NotebookApp.allow_origin = '*'
-#c.NotebookApp.allow_remote_access = True
-
-# Generate blank nbgrader config file
+# Generate a blank nbgrader config file
 nbgrader generate_config
+```
 
+After creating the `nbgrader_config.py` file you will need to edit the following settings.
+
+```python
 # Add these lines to nbgrader_config.py
+# Manage root dir with tempfile module
 import tempfile
 c.Exchange.root = tempfile.mkdtemp()
+
+# These settings make Jupyter play nice with Gitpod and can also be set when invoking Jupyter from the cmd line
 c.NotebookApp.allow_origin = '*'
 c.NotebookApp.allow_remote_access = True
 
-# andUpdate the Course name
+# Update the course name (check that is variable is only set once)
 c.CourseDirectory.course_id = 'COURSE_ID_2024'
+```
 
+```bash
 # Populate nbgrader student database (on first run only)
 nbgrader db student import ../students/students_2024.csv
+# Where file student file format is:
+#id,first_name,last_name
+#123456,Testy,McTest
+```
 
-# Open jupyter for grading or assignment development
+Open Jupyter for grading or assignment development:
+
+```bash
 # Launch jupyter-lab
 jupyter lab --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_access=True --NotebookApp.token='' --NotebookApp.password='' --no-browser --port=8888
 
-# or if using older nbgrader < v0.9.0, can use jupyter-notebook
+# or if using older nbgrader < v0.9.0, can use jupyter-notebook (has a nicer interface)
 jupyter notebook --NotebookApp.allow_origin='*' --NotebookApp.allow_remote_access=True --NotebookApp.token='' --NotebookApp.password='' --no-browser --port=8888
 
 ```
 
 ## Installing nbgrader locally
+
+If you want to set up nbgrader in an env on your local computer (not in Gitpod), follow these instructions.
 
 ```bash
 # Create conda env from yml
@@ -102,7 +121,7 @@ pip3 install -r requirements.txt
 conda install -c bioconda blast bwa samtools
 ```
 
-## Setting up local nbgrader instance
+### Setting up local nbgrader instance
 
 Generate blank config file.
 
@@ -183,8 +202,6 @@ https://nbgrader.readthedocs.io/en/stable/user_guide/autograding_resources.html
 https://gist.github.com/psychemedia/27638941d7dd94a16a33ff632e0aee8b
 
 
-
-
 ## Generate & release assignment from within jupyter, or manually:
 
 ```
@@ -198,45 +215,78 @@ Student submissions should be located in the following path and have the
 same name as the source assignment:
 
 ```
-submitted/[STUDENT ID]/Assignment_1/Assignment_1.ipynb
+submitted/[STUDENT_ID]/Assignment_1/Assignment_1.ipynb
 ```
 
-Check submission metadata:
+If you happen to be importing assignment submissions from UniMelb's Canvas LMS you can use the `nb_load` utility included in this template.
+
+To use `nb_load` your raw submissions exported from canvas should be in one directory and have a name fortmat where the first run of numbers bounded by underscores corresponds to a student ID in your database.
+
+Here is an example submission name:
+
 ```
-cd submitted
-nbgrader update . #from submission dir
+# nb_load will extract 123456 as the student ID
+submissions/mctesttesty_123456_19058741_Assignment_1.ipynb
+```
+
+To place this submission in its correct location for grading with nbgrader:
+
+```bash
+nb_load --submissions submissions --assignment Assignment_1 --idlist nbgrader/students/id_list_2024.csv
+```
+
+This command will move the example submission to the location:
+
+```
+nbgrader/Assignments/submitted/123456/Assignment_1/Assignment_1.ipynb
+```
+
+Before running the autograder you can check submission metadata:
+
+```bash
+cd nbgrader/Assignments/submitted
+# This will test all notebooks below this level. 
+# Note that this may include other submitted assignments.
+nbgrader update . 
 ```
 
 
 To bulk autograde submissions:
 
 ```bash
-# Submissions must be in the student folders with generic Assignment name
+# Submission notebooks must be in the student folders and have a name matching the assignment source book
 # Bulk autograde
 nbgrader autograde --assignment Assignment_1
 nbgrader autograde --assignment Assignment_2
 nbgrader autograde --assignment Assignment_3
 nbgrader autograde --assignment Exam_B
 
-#nbgrader autograde --force --assignment Assignment_3
-
 ```
 
-If you need to amend any test in an assignment during marking:
+By default this will skipp any submissions that have already been graded.
+
+If you need to amend any test cases in an assignment during marking, you must first edit the source notebook 
+then generate a new release.
 
 ```bash
 # First edit the *source* notebook, then generate a new release:
 nbgrader generate_assignment Assignment_1
 nbgrader release_assignment Assignment_1
+```
+To update the autograding results with the new tests run autograder with the `--force` option.
+
+```bash 
 # The re-run autograding
 nbgrader autograde --force --assignment Assignment_1
 ```
 
 ## Exporting grades
 
-Export grades to CSV
+Export grades to CSV  
 
-```
+Note: When formatting for Canvas, must use linux EOL characters
+
+```bash
 nbgrader export --to grades/A1_grades_nbgrader.csv --assignment Assignment_1
 nbgrader export --to grades/A2_grades_nbgrader.csv --assignment Assignment_2
 nbgrader export --to grades/A3_grades_nbgrader.csv --assignment Assignment_3
@@ -247,7 +297,7 @@ nbgrader export --to grades/Exam_B_grades_nbgrader.csv --assignment Exam_B
 
 You can use the custom exporter module gpqExporter to export grades per question.
 
-```
+```bash 
 # Note: In this case "--to" sets an output directory that individual assignment
 # grade reports are written to.
 
@@ -257,18 +307,16 @@ nbgrader export --to grades --exporter=plugins.gpqexport.gpqExporter --assignmen
 nbgrader export --to grades --exporter=plugins.gpqexport.gpqExporter --assignment Exam_B
 
 # Use --student to get grades for a specific student
-nbgrader export --to grades --exporter=plugins.gpqexport.gpqExporter --assignment Assignment_1 --student 217020
+nbgrader export --to grades --exporter=plugins.gpqexport.gpqExporter --assignment Assignment_1 --student 123456
 
 ```
-
-Note: When formatting for Canvas, must use linux EOL characters
 
 
 ## Generating feedback
 
 Create feedback dir with html reports
 
-```
+```bash
 nbgrader generate_feedback "Assignment_1"
 nbgrader generate_feedback "Assignment_2"
 nbgrader generate_feedback "Assignment_3"
@@ -276,8 +324,8 @@ nbgrader generate_feedback "Assignment_3"
 
 Generate feedback for one student:
 
-```
-nbgrader generate_feedback "Assignment_2" --student 188001
+```bash
+nbgrader generate_feedback "Assignment_2" --student 123456
 ```
 
 
