@@ -1,6 +1,14 @@
+<a href="https://www.gnu.org/licenses/gpl-3.0">
+  <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" align="left" height="20"/>
+</a> 
+
 <a href="https://gitpod.io/#https://github.com/adamtaranto/nbgrader-gitpod-template">
   <img src="https://gitpod.io/button/open-in-gitpod.svg" align="right" height="35"/>
 </a>
+
+<br>
+
+
 
 # Working with nbgrader in Gitpod
 
