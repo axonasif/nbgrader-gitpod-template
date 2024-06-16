@@ -1,3 +1,7 @@
+<a href="https://gitpod.io/#https://github.com/adamtaranto/nbgrader-gitpod-template">
+  <img src="https://gitpod.io/button/open-in-gitpod.svg" align="right" height="35"/>
+</a>
+
 # Working with nbgrader in Gitpod
 
 ## Quickstart upon reopening a stopped Gitpod workspace
