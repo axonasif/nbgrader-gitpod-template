@@ -42,7 +42,7 @@ fi
 
 # Define the base directory
 GITPOD_REPO_ROOT="${GITPOD_REPO_ROOT:-$PWD}"
-NBGRADER_ASSIGNMENTS_DIR="$GITPOD_REPO_ROOT/nbgrader/$COURSE_NAME"
+NBGRADER_ASSIGNMENTS_DIR="$GITPOD_REPO_ROOT/nbgrader/$COURSE_NAME/submitted"
 
 # Check for the existence of the nbgrader assignments directory
 if [[ ! -d "$NBGRADER_ASSIGNMENTS_DIR" ]]; then
