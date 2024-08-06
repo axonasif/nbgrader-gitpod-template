@@ -13,6 +13,9 @@ tasks:
     command: |
       echo "Running: $GITPOD_WORKSPACE_URL"
       echo "Call 'gogo a' or 'gogo w' to edit nbgrader assignments or workshops."
+      if test -e /workspace/.gogostate; then
+        gogo
+      fi
 
 ports:
   - name: Jupyter Notebook
