@@ -7,12 +7,6 @@ usage() {
     exit 1
 }
 
-# Validate and process the argument
-if [ $# -ne 1 ]; then
-    usage
-fi
-
-
 # Persist state for auto-start on workspace reboot
 statefile=/workspace/.gogostate
 if test ! -e "${statefile}"; then {
@@ -26,6 +20,10 @@ if test ! -e "${statefile}"; then {
     fi
 } fi
 
+# Validate and process the argument
+if [ $# -ne 1 ]; then
+    usage
+fi
 
 # Convert argument to lowercase for case-insensitive comparison
 if test ! -v arg; then
