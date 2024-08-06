@@ -9,26 +9,28 @@ usage() {
 
 # Persist state for auto-start on workspace reboot
 statefile=/workspace/.gogostate
-if test ! -e "${statefile}"; then {
-    printf '%s,%s\n' "${GITPOD_INSTANCE_ID}" "${arg}" > "${statefile}"
-} else {
+if test -e "${statefile}"; then {
     IFS=',' read -r iid sarg < "${statefile}"
     if test "${iid}" != "${GITPOD_INSTANCE_ID}"; then
-        printf '%s,%s\n' "${GITPOD_INSTANCE_ID}" "${arg}" > "${statefile}"
+        printf '%s,%s\n' "${GITPOD_INSTANCE_ID}" "${sarg}" > "${statefile}"
         # Set arg
         arg="${sarg}"
     fi
 } fi
 
 # Validate and process the argument
-if [ $# -ne 1 ]; then
-    usage
+if test ! -v arg; then
+    if [ $# -ne 1 ]; then
+        usage
+    fi
+
+    # Convert argument to lowercase for case-insensitive comparison
+    arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+    printf '%s,%s\n' "${GITPOD_INSTANCE_ID}" "${arg}" > "${statefile}"
 fi
 
-# Convert argument to lowercase for case-insensitive comparison
-if test ! -v arg; then
-    arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-fi
+
 
 # Navigate to the appropriate directory based on the argument
 case "$arg" in
